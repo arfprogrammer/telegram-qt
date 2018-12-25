@@ -84,6 +84,9 @@ void BaseConnection::onTransportStateChanged()
             setStatus(Status::HasDhKey, StatusReason::Local);
         }
         break;
+    case QAbstractSocket::ClosingState:
+        qCDebug(c_baseConnectionCategory) << this << __func__ << "Closing...";
+        break;
     case QAbstractSocket::UnconnectedState:
         setStatus(Status::Disconnected, status() == Status::Disconnecting ? StatusReason::Local : StatusReason::Remote);
         break;
@@ -113,10 +116,10 @@ void BaseConnection::onTransportPackageReceived(const QByteArray &package)
     }
     const quint64 *authKeyIdBytes = reinterpret_cast<const quint64*>(package.constData());
     if (*authKeyIdBytes) {
-        if (!processAuthKey(*authKeyIdBytes)) {
-            qCDebug(c_baseConnectionCategory) << this << "Received incorrect auth id.";
-            return;
-        }
+//        if (!processAuthKey(*authKeyIdBytes)) {
+//            qCDebug(c_baseConnectionCategory) << this << "Received incorrect auth id.";
+//            return;
+//        }
         if (!m_rpcLayer->processPackage(package)) {
             qCDebug(c_baseConnectionCategory) << this << __func__
                                               << "Unable to process RPC packet:" << package.toHex();

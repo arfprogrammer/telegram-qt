@@ -289,11 +289,55 @@ quint32 RpcLayer::activeLayer() const
     return m_invokeWithLayer.top();
 }
 
+bool RpcLayer::processAuthKey(quint64 authKeyId)
+{
+    if (authKeyId == m_sendHelper->authId()) {
+        return true;
+    }
+    if (m_sendHelper->authId()) {
+        qCInfo(c_serverRpcLayerCategory) << this
+                                                      << "new session authKeyId"
+                                                      << showbase << hex << authKeyId
+                                                      << "is different from the expected"
+                                                      << m_sendHelper->authId();
+    } else {
+        Session *session = api()->getSessionByAuthId(authKeyId);
+        if (session) {
+            //setSession(session);
+            m_sendHelper->setAuthKey(session->authKey);
+            return true;
+//            qCInfo(c_serverRpcLayerCategory) << this << transport()->remoteAddress()
+//                                                          << "Unable to find a session with authKeyId"
+//                                                          << showbase << hex << authKeyId;
+        }
+        User *user = api()->getUserByAuthId(authKeyId);
+        if (user) {
+            //api()->createSession();
+        }
+        //m_sendHelper->setAuthKey();
+        return true;
+    }
+//    disconnect(m_transport, &BaseTransport::packageReceived, this, &RemoteClientConnection::onTransportPackageReceived);
+//    connect(m_transport, &BaseTransport::packageReceived, this, &RemoteClientConnection::sendKeyError);
+//    setStatus(Status::Failed, StatusReason::Local);
+//    sendKeyError();
+    return false;
+}
+
 bool RpcLayer::processDecryptedMessageHeader(const MTProto::FullMessageHeader &header)
 {
     if (!header.sessionId) {
         qCWarning(c_serverRpcLayerCategory) << Q_FUNC_INFO << "Unexpected RPC packet without sessionId";
         return false;
+    }
+
+    if (!m_session) {
+        m_session = new Session;
+        m_session->setConnection(reinterpret_cast<RemoteClientConnection*>(m_sendHelper->getConnection()));
+        m_session->sessionId = header.sessionId;
+        m_session->setUser(api()->getUserByAuthId(m_sendHelper->authId()));
+        m_session->setInitialServerSalt(header.serverSalt);
+        return true;
     }
 
     if (!m_session->sessionId) {
@@ -306,6 +350,9 @@ bool RpcLayer::processDecryptedMessageHeader(const MTProto::FullMessageHeader &h
                                             << header.sessionId << "(in package header)";
         return false;
     }
+    m_session->lastSequenceNumber = header.sequenceNumber;
+    m_session->lastMessageNumber = header.messageId;
+    return true;
 
     if (!m_session->checkSalt(header.serverSalt)) {
         sendIgnoredMessageNotification(MTProto::IgnoredMessageNotification::IncorrectServerSalt, header);

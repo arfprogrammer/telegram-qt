@@ -59,6 +59,7 @@ public:
     quint32 activeLayer() const;
 
 protected:
+    bool processAuthKey(quint64 authKeyId) override;
     bool processDecryptedMessageHeader(const MTProto::FullMessageHeader &header) override;
     SAesKey getDecryptionAesKey(const QByteArray &messageKey) const final { return generateClientToServerAesKey(messageKey); }
     SAesKey getEncryptionAesKey(const QByteArray &messageKey) const final { return generateServerToClientAesKey(messageKey); }

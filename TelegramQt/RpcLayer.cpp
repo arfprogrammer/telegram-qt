@@ -48,6 +48,11 @@ void BaseRpcLayer::setSendPackageHelper(BaseSendPackageHelper *helper)
     m_sendHelper = helper;
 }
 
+bool BaseRpcLayer::processAuthKey(quint64 authKeyId)
+{
+    return authKeyId == m_sendHelper->authId();
+}
+
 bool BaseRpcLayer::processPackage(const QByteArray &package)
 {
     if (package.size() < 24) {
@@ -57,6 +62,12 @@ bool BaseRpcLayer::processPackage(const QByteArray &package)
                                       << "Read" << package.length() << "bytes:";
     // Encrypted Message
     const quint64 *authKeyIdBytes = reinterpret_cast<const quint64*>(package.constData());
+
+    if (!processAuthKey(*authKeyIdBytes)) {
+        qCDebug(c_baseRpcLayerCategoryIn) << this << "Received incorrect auth id.";
+        return false;
+    }
+
     const QByteArray messageKey = package.mid(8, 16);
     const QByteArray encryptedData = package.mid(24);
     const SAesKey key = getDecryptionAesKey(messageKey);

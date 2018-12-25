@@ -91,6 +91,11 @@ void User::setPhoneNumber(const QString &phoneNumber)
     m_id = qHash(m_phoneNumber);
 }
 
+void User::setUserName(const QString &userName)
+{
+    m_userName = userName;
+}
+
 void User::setFirstName(const QString &firstName)
 {
     m_firstName = firstName;

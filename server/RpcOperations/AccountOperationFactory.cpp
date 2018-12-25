@@ -482,6 +482,9 @@ void AccountRpcOperation::runUpdateUsername()
         return;
     }
     TLUser result;
+    User *self = layer()->getUser();
+    self->setUserName(m_updateUsername.username);
+    api()->setupTLUser(&result, self, self);
     sendRpcReply(result);
 }
 // End of generated run methods

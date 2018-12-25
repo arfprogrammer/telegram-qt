@@ -54,6 +54,7 @@ public:
     void setSendPackageHelper(BaseSendPackageHelper *helper);
 
     bool processPackage(const QByteArray &package);
+    virtual bool processAuthKey(quint64 authKeyId);
     virtual bool processDecryptedMessageHeader(const MTProto::FullMessageHeader &header) = 0;
     virtual bool processMTProtoMessage(const MTProto::Message &message) = 0;
 

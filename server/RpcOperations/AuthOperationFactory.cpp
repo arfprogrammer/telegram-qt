@@ -182,7 +182,7 @@ void AuthRpcOperation::runCheckPassword()
         sendRpcError(RpcError::PasswordHashInvalid);
         return;
     }
-    user->addSession(session);
+    api()->addUserSession(user, session);
 
     TLAuthAuthorization result;
     qCDebug(c_serverAuthRpcCategory) << "Result type:" << result.tlType;

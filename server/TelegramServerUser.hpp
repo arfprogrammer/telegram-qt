@@ -64,6 +64,7 @@ public:
     virtual QString phoneNumber() const = 0;
     virtual QString firstName() const = 0;
     virtual QString lastName() const = 0;
+    virtual QString userName() const = 0;
     virtual bool isOnline() const = 0;
     virtual quint32 dcId() const = 0;
     virtual QVector<quint32> contactList() const = 0;
@@ -83,6 +84,7 @@ public:
     void setPhoneNumber(const QString &phoneNumber);
 
     QString userName() const { return m_userName; }
+    void setUserName(const QString &userName);
 
     QString firstName() const { return m_firstName; }
     void setFirstName(const QString &firstName);

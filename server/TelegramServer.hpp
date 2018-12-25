@@ -73,9 +73,11 @@ public:
 
     User *getUser(const QString &identifier) const override;
     User *getUser(quint32 userId) const override;
+    User *getUserByAuthId(quint64 authKeyId) const override;
     User *getUser(const TLInputUser &inputUser, User *self) const override;
     User *tryAccessUser(quint32 userId, quint64 accessHash, User *applicant) const override;
     User *addUser(const QString &identifier) override;
+    void addUserSession(User *user, Session *session) override;
 
     Session *createSession(quint64 authId, const QByteArray &authKey, const QString &address) override;
     Session *getSessionByAuthId(quint64 authKeyId) const override;
@@ -105,6 +107,7 @@ private:
 
     QHash<QString, quint32> m_phoneToUserId;
     QHash<quint64, Session*> m_authIdToSession;
+    QHash<quint64, User*> m_authToUser;
     QHash<quint32, User*> m_users; // userId to User
     QSet<RemoteClientConnection*> m_activeConnections;
     QSet<RemoteServerConnection*> m_remoteServers;

@@ -37,8 +37,6 @@ protected slots:
     void onClientDhStateChanged();
 
 protected:
-    bool processAuthKey(quint64 authKeyId) override;
-
     DcOption m_dcOption;
     QVector<PendingRpcOperation *> m_queuedOperations;
 };

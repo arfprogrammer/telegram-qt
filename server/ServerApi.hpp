@@ -69,11 +69,13 @@ public:
     virtual RemoteUser *getRemoteUser(const QString &identifier) const = 0;
     virtual User *getUser(const QString &identifier) const = 0;
     virtual User *getUser(quint32 userId) const = 0;
+    virtual User *getUserByAuthId(quint64 authKeyId) const = 0;
     virtual User *getUser(const TLInputUser &inputUser, User *self) const = 0;
     virtual User *tryAccessUser(quint32 userId, quint64 accessHash, User *applicant) const = 0;
     virtual Session *createSession(quint64 authId, const QByteArray &authKey, const QString &address) = 0;
     virtual Session *getSessionByAuthId(quint64 authId) const = 0;
     virtual User *addUser(const QString &identifier) = 0;
+    virtual void addUserSession(User *user, Session *session) = 0;
 };
 
 } // Server
