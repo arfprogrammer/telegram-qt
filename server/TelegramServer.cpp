@@ -82,6 +82,7 @@ bool Server::start()
     qCInfo(loggingCategoryServer).nospace().noquote() << this << " start server (DC " << m_dcOption.id << ") "
                                                       << "on " << m_dcOption.address << ":" << m_dcOption.port
                                                       << "; Key:" << hex << showbase << m_key.fingerprint;
+
     addServiceUser();
     return true;
 }
@@ -212,7 +213,6 @@ bool Server::setupTLUser(TLUser *output, const RemoteUser *input, const User *ap
     output->tlType = TLValue::User;
     output->firstName = input->firstName();
     output->lastName = input->lastName();
-    output->username = input->userName();
     // TODO: Check if the user has access to the requested user phone
     output->phone = input->phoneNumber();
 
@@ -286,11 +286,6 @@ User *Server::getUser(quint32 userId) const
     return m_users.value(userId);
 }
 
-User *Server::getUserByAuthId(quint64 authKeyId) const
-{
-    return m_authToUser.value(authKeyId);
-}
-
 User *Server::getUser(const TLInputUser &inputUser, User *self) const
 {
     switch (inputUser.tlType) {
@@ -335,12 +330,6 @@ Session *Server::createSession(quint64 authId, const QByteArray &authKey, const 
 Session *Server::getSessionByAuthId(quint64 authKeyId) const
 {
     return m_authIdToSession.value(authKeyId);
-}
-
-void Server::addUserSession(User *user, Session *session)
-{
-    user->addSession(session);
-    m_authToUser.insert(session->authId, user);
 }
 
 void Server::insertUser(User *user)

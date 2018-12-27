@@ -42,7 +42,7 @@ bool RpcOperation::verifyHasUserOrWantedUser()
 
 bool RpcOperation::processNotImplementedMethod(TLValue functionCode)
 {
-    qWarning() << "RPC Operation is not implemented:" << functionCode.toString();
+    qWarning() << "RPC Operation is not implemented:" << functionCode;
     return false;
 }
 

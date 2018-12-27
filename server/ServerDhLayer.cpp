@@ -76,15 +76,13 @@ bool DhLayer::sendResultPQ()
     const TLVector<quint64> fingerprints = { m_rsaKey.fingerprint };
     QByteArray output;
     CTelegramStream outputStream(&output, /* write */ true);
-    qCDebug(c_serverDhLayerCategory) << "Write data:" << m_clientNonce << m_serverNonce
-                                     << "fp:" << fingerprints << "(pq:" << intToBytes(m_pq).toHex() << ")";
-    qCWarning(c_serverDhLayerCategory) << "DH Key:" << m_rsaKey.fingerprint << hex << showbase << m_rsaKey.fingerprint;
+//    qCDebug(c_serverDhLayerCategory) << "Write data:" << m_clientNonce << m_serverNonce << pqAsByteArray.toHex() << "fp:" << fingerprints << "(pq:" << m_pq << ")";
     outputStream << TLValue::ResPQ;
     outputStream << m_clientNonce;
     outputStream << m_serverNonce;
     outputStream << intToBytes(m_pq);
     outputStream << fingerprints;
-    qCDebug(c_serverDhLayerCategory) << "Wrote data:" << output.toHex();
+//    qCDebug(c_serverDhLayerCategory) << "Wrote data:" << output.toHex();
     return sendReplyPackage(output);
 }
 
@@ -341,7 +339,6 @@ bool DhLayer::processSetClientDHParams(const QByteArray &data)
     }
     m_sendHelper->setAuthKey(newAuthKey);
     setServerSalt(m_serverNonce.parts[0] ^ m_newNonce.parts[0]);
-    qCInfo(c_serverDhLayerCategory) << "New auth key:" << showbase << hex << m_sendHelper->authId();
     return true;
 }
 

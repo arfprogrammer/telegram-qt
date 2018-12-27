@@ -103,6 +103,3 @@ add_executable(TelegramServer ${server_SOURCES})
 target_link_libraries(TelegramServer LINK_PUBLIC
     TelegramServerQt${QT_VERSION_MAJOR}
 )
-
-set(DOCS "README.md")
-install(FILES ${DOCS} DESTINATION ${CMAKE_INSTALL_FULL_DOCDIR})

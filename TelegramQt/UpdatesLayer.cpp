@@ -11,7 +11,6 @@
 #include "TLTypesDebug.hpp"
 
 #include <QLoggingCategory>
-#include <QTimer>
 
 Q_LOGGING_CATEGORY(c_updatesLoggingCategory, "telegram.client.updates", QtWarningMsg)
 
@@ -33,8 +32,6 @@ void UpdatesInternalApi::sync()
         op->getResult(&res);
         qCDebug(c_updatesLoggingCategory) << "res:" << res;
     });
-
-    QTimer::singleShot(10000, this, &UpdatesInternalApi::sync);
 }
 
 void UpdatesInternalApi::setBackend(Backend *backend)

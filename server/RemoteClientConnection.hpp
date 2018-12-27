@@ -36,6 +36,8 @@ protected slots:
 
     void sendKeyError();
 
+protected:
+    bool processAuthKey(quint64 authKeyId) override;
 };
 
 } // Server

@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
 #endif
     cluster.start();
 
-    if (User *u = cluster.addUser(QStringLiteral("+79222988314"), /* dc */ 1)) {
+    if (User *u = cluster.addUser(QStringLiteral("5432101"), /* dc */ 1)) {
         u->setFirstName(QStringLiteral("Dc1User1"));
         u->setLastName(QStringLiteral("Dc1"));
         u->setPlainPassword(QStringLiteral("mypassword"));
@@ -120,19 +120,13 @@ int main(int argc, char *argv[])
         u->setPlainPassword(QStringLiteral("hispassword"));
     }
 
-    User *user1dc1 = cluster.getUser(QStringLiteral("+79222988314"));
+    User *user1dc1 = cluster.getUser(QStringLiteral("5432101"));
     User *user2dc1 = cluster.getUser(QStringLiteral("6432101"));
     User *user3dc2 = cluster.getUser(QStringLiteral("5432102"));
     user1dc1->importContact(user2dc1->toContact());
     user1dc1->importContact(user3dc2->toContact());
     user2dc1->importContact(user1dc1->toContact());
     user3dc2->importContact(user1dc1->toContact());
-
-    User *admin = cluster.addUser(QStringLiteral("admin"), /* dc */ 3);
-    admin->setFirstName(QStringLiteral("admin"));
-    admin->setLastName(QStringLiteral("admin"));
-    admin->setUserName(QStringLiteral("admin"));
-    admin->importContact(user1dc1->toContact());
 
     return a.exec();
 }
