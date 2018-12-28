@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 %post qt5 -p /sbin/ldconfig
 %postun qt5 -p /sbin/ldconfig
 
+%post qt5-declarative -p /sbin/ldconfig
+%postun qt5-declarative -p /sbin/ldconfig
+
 %files qt5
 %defattr(-,root,root,-)
 %{_libdir}/libTelegramQt5.so.%{version_major}.%{version_minor}
@@ -71,7 +74,7 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_libdir}/qt5/qml/TelegramQt/qmldir
 %{_libdir}/qt5/qml/TelegramQt/plugins.qmltypes
-%{_libdir}/qt5/qml/TelegramQt/libTelegramQt5Qml.so
+%{_libdir}/libTelegramQt5Qml.so
 
 %files qt5-devel
 %defattr(-,root,root,-)
