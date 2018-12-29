@@ -17,7 +17,7 @@ RESOURCES += qml.qrc
 LIBS += -lssl -lcrypto -lz
 LIBS += -L$$OUT_PWD/../../TelegramQt
 LIBS += -lTelegramQt$${QT_MAJOR_VERSION}
-LIBS += -L$$OUT_PWD/../../imports/TelegramQtQml
+LIBS += -L$$OUT_PWD/../../imports/TelegramQtQmlPlugin
 LIBS += -lTelegramQt$${QT_MAJOR_VERSION}Qml
 
 INCLUDEPATH += $$PWD/../../TelegramQt
