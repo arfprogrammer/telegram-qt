@@ -28,6 +28,26 @@ void dumpRpc(CTelegramStream &stream)
 
     switch (request) {
     // Generated RPC debug cases
+    case TLValue::AccountAcceptAuthorization: {
+        quint32 botId;
+        stream >> botId;
+        QString scope;
+        stream >> scope;
+        QString publicKey;
+        stream >> publicKey;
+        TLVector<TLSecureValueHash> valueHashes;
+        stream >> valueHashes;
+        TLSecureCredentialsEncrypted credentials;
+        stream >> credentials;
+        qDebug() << request << "botId" << botId << "scope" << scope << "publicKey" << publicKey << "valueHashes" << valueHashes << "credentials" << credentials;
+    }
+        break;
+
+    case TLValue::AccountCancelPasswordEmail: {
+        qDebug() << request;
+    }
+        break;
+
     case TLValue::AccountChangePhone: {
         QString phoneNumber;
         stream >> phoneNumber;
@@ -46,10 +66,33 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::AccountConfirmPasswordEmail: {
+        QString code;
+        stream >> code;
+        qDebug() << request << "code" << code;
+    }
+        break;
+
+    case TLValue::AccountConfirmPhone: {
+        QString phoneCodeHash;
+        stream >> phoneCodeHash;
+        QString phoneCode;
+        stream >> phoneCode;
+        qDebug() << request << "phoneCodeHash" << phoneCodeHash << "phoneCode" << phoneCode;
+    }
+        break;
+
     case TLValue::AccountDeleteAccount: {
         QString reason;
         stream >> reason;
         qDebug() << request << "reason" << reason;
+    }
+        break;
+
+    case TLValue::AccountDeleteSecureValue: {
+        TLVector<TLSecureValueType> types;
+        stream >> types;
+        qDebug() << request << "types" << types;
     }
         break;
 
@@ -58,7 +101,28 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::AccountGetAllSecureValues: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::AccountGetAuthorizationForm: {
+        quint32 botId;
+        stream >> botId;
+        QString scope;
+        stream >> scope;
+        QString publicKey;
+        stream >> publicKey;
+        qDebug() << request << "botId" << botId << "scope" << scope << "publicKey" << publicKey;
+    }
+        break;
+
     case TLValue::AccountGetAuthorizations: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::AccountGetContactSignUpNotification: {
         qDebug() << request;
     }
         break;
@@ -76,9 +140,9 @@ void dumpRpc(CTelegramStream &stream)
         break;
 
     case TLValue::AccountGetPasswordSettings: {
-        QByteArray currentPasswordHash;
-        stream >> currentPasswordHash;
-        qDebug() << request << "currentPasswordHash" << currentPasswordHash;
+        TLInputCheckPasswordSRP password;
+        stream >> password;
+        qDebug() << request << "password" << password;
     }
         break;
 
@@ -89,7 +153,28 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::AccountGetSecureValue: {
+        TLVector<TLSecureValueType> types;
+        stream >> types;
+        qDebug() << request << "types" << types;
+    }
+        break;
+
+    case TLValue::AccountGetTmpPassword: {
+        TLInputCheckPasswordSRP password;
+        stream >> password;
+        quint32 period;
+        stream >> period;
+        qDebug() << request << "password" << password << "period" << period;
+    }
+        break;
+
     case TLValue::AccountGetWallPapers: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::AccountGetWebAuthorizations: {
         qDebug() << request;
     }
         break;
@@ -99,17 +184,13 @@ void dumpRpc(CTelegramStream &stream)
         stream >> tokenType;
         QString token;
         stream >> token;
-        QString deviceModel;
-        stream >> deviceModel;
-        QString systemVersion;
-        stream >> systemVersion;
-        QString appVersion;
-        stream >> appVersion;
         bool appSandbox;
         stream >> appSandbox;
-        QString langCode;
-        stream >> langCode;
-        qDebug() << request << "tokenType" << tokenType << "token" << token << "deviceModel" << deviceModel << "systemVersion" << systemVersion << "appVersion" << appVersion << "appSandbox" << appSandbox << "langCode" << langCode;
+        QByteArray secret;
+        stream >> secret;
+        TLVector<quint32> otherUids;
+        stream >> otherUids;
+        qDebug() << request << "tokenType" << tokenType << "token" << token << "appSandbox" << appSandbox << "secret" << secret << "otherUids" << otherUids;
     }
         break;
 
@@ -119,6 +200,11 @@ void dumpRpc(CTelegramStream &stream)
         TLReportReason reason;
         stream >> reason;
         qDebug() << request << "peer" << peer << "reason" << reason;
+    }
+        break;
+
+    case TLValue::AccountResendPasswordEmail: {
+        qDebug() << request;
     }
         break;
 
@@ -134,10 +220,31 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::AccountSendChangePhoneCode: {
-        QString phoneNumber;
-        stream >> phoneNumber;
-        qDebug() << request << "phoneNumber" << phoneNumber;
+    case TLValue::AccountResetWebAuthorization: {
+        quint64 hash;
+        stream >> hash;
+        qDebug() << request << "hash" << hash;
+    }
+        break;
+
+    case TLValue::AccountResetWebAuthorizations: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::AccountSaveSecureValue: {
+        TLInputSecureValue value;
+        stream >> value;
+        quint64 secureSecretId;
+        stream >> secureSecretId;
+        qDebug() << request << "value" << value << "secureSecretId" << secureSecretId;
+    }
+        break;
+
+    case TLValue::AccountSendVerifyEmailCode: {
+        QString email;
+        stream >> email;
+        qDebug() << request << "email" << email;
     }
         break;
 
@@ -145,6 +252,13 @@ void dumpRpc(CTelegramStream &stream)
         TLAccountDaysTTL ttl;
         stream >> ttl;
         qDebug() << request << "ttl" << ttl;
+    }
+        break;
+
+    case TLValue::AccountSetContactSignUpNotification: {
+        bool silent;
+        stream >> silent;
+        qDebug() << request << "silent" << silent;
     }
         break;
 
@@ -162,7 +276,9 @@ void dumpRpc(CTelegramStream &stream)
         stream >> tokenType;
         QString token;
         stream >> token;
-        qDebug() << request << "tokenType" << tokenType << "token" << token;
+        TLVector<quint32> otherUids;
+        stream >> otherUids;
+        qDebug() << request << "tokenType" << tokenType << "token" << token << "otherUids" << otherUids;
     }
         break;
 
@@ -183,20 +299,11 @@ void dumpRpc(CTelegramStream &stream)
         break;
 
     case TLValue::AccountUpdatePasswordSettings: {
-        QByteArray currentPasswordHash;
-        stream >> currentPasswordHash;
+        TLInputCheckPasswordSRP password;
+        stream >> password;
         TLAccountPasswordInputSettings newSettings;
         stream >> newSettings;
-        qDebug() << request << "currentPasswordHash" << currentPasswordHash << "newSettings" << newSettings;
-    }
-        break;
-
-    case TLValue::AccountUpdateProfile: {
-        QString firstName;
-        stream >> firstName;
-        QString lastName;
-        stream >> lastName;
-        qDebug() << request << "firstName" << firstName << "lastName" << lastName;
+        qDebug() << request << "password" << password << "newSettings" << newSettings;
     }
         break;
 
@@ -214,6 +321,26 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::AccountVerifyEmail: {
+        QString email;
+        stream >> email;
+        QString code;
+        stream >> code;
+        qDebug() << request << "email" << email << "code" << code;
+    }
+        break;
+
+    case TLValue::AccountVerifyPhone: {
+        QString phoneNumber;
+        stream >> phoneNumber;
+        QString phoneCodeHash;
+        stream >> phoneCodeHash;
+        QString phoneCode;
+        stream >> phoneCode;
+        qDebug() << request << "phoneNumber" << phoneNumber << "phoneCodeHash" << phoneCodeHash << "phoneCode" << phoneCode;
+    }
+        break;
+
     case TLValue::AuthBindTempAuthKey: {
         quint64 permAuthKeyId;
         stream >> permAuthKeyId;
@@ -227,17 +354,26 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::AuthCheckPassword: {
-        QByteArray passwordHash;
-        stream >> passwordHash;
-        qDebug() << request << "passwordHash" << passwordHash;
+    case TLValue::AuthCancelCode: {
+        QString phoneNumber;
+        stream >> phoneNumber;
+        QString phoneCodeHash;
+        stream >> phoneCodeHash;
+        qDebug() << request << "phoneNumber" << phoneNumber << "phoneCodeHash" << phoneCodeHash;
     }
         break;
 
-    case TLValue::AuthCheckPhone: {
-        QString phoneNumber;
-        stream >> phoneNumber;
-        qDebug() << request << "phoneNumber" << phoneNumber;
+    case TLValue::AuthCheckPassword: {
+        TLInputCheckPasswordSRP password;
+        stream >> password;
+        qDebug() << request << "password" << password;
+    }
+        break;
+
+    case TLValue::AuthDropTempAuthKeys: {
+        TLVector<quint64> exceptAuthKeys;
+        stream >> exceptAuthKeys;
+        qDebug() << request << "exceptAuthKeys" << exceptAuthKeys;
     }
         break;
 
@@ -287,50 +423,17 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::AuthResendCode: {
+        QString phoneNumber;
+        stream >> phoneNumber;
+        QString phoneCodeHash;
+        stream >> phoneCodeHash;
+        qDebug() << request << "phoneNumber" << phoneNumber << "phoneCodeHash" << phoneCodeHash;
+    }
+        break;
+
     case TLValue::AuthResetAuthorizations: {
         qDebug() << request;
-    }
-        break;
-
-    case TLValue::AuthSendCall: {
-        QString phoneNumber;
-        stream >> phoneNumber;
-        QString phoneCodeHash;
-        stream >> phoneCodeHash;
-        qDebug() << request << "phoneNumber" << phoneNumber << "phoneCodeHash" << phoneCodeHash;
-    }
-        break;
-
-    case TLValue::AuthSendCode: {
-        QString phoneNumber;
-        stream >> phoneNumber;
-        quint32 smsType;
-        stream >> smsType;
-        quint32 apiId;
-        stream >> apiId;
-        QString apiHash;
-        stream >> apiHash;
-        QString langCode;
-        stream >> langCode;
-        qDebug() << request << "phoneNumber" << phoneNumber << "smsType" << smsType << "apiId" << apiId << "apiHash" << apiHash << "langCode" << langCode;
-    }
-        break;
-
-    case TLValue::AuthSendInvites: {
-        TLVector<QString> phoneNumbers;
-        stream >> phoneNumbers;
-        QString message;
-        stream >> message;
-        qDebug() << request << "phoneNumbers" << phoneNumbers << "message" << message;
-    }
-        break;
-
-    case TLValue::AuthSendSms: {
-        QString phoneNumber;
-        stream >> phoneNumber;
-        QString phoneCodeHash;
-        stream >> phoneCodeHash;
-        qDebug() << request << "phoneNumber" << phoneNumber << "phoneCodeHash" << phoneCodeHash;
     }
         break;
 
@@ -360,6 +463,24 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::BotsAnswerWebhookJSONQuery: {
+        quint64 queryId;
+        stream >> queryId;
+        TLDataJSON data;
+        stream >> data;
+        qDebug() << request << "queryId" << queryId << "data" << data;
+    }
+        break;
+
+    case TLValue::BotsSendCustomRequest: {
+        QString customMethod;
+        stream >> customMethod;
+        TLDataJSON params;
+        stream >> params;
+        qDebug() << request << "customMethod" << customMethod << "params" << params;
+    }
+        break;
+
     case TLValue::ChannelsCheckUsername: {
         TLInputChannel channel;
         stream >> channel;
@@ -373,6 +494,15 @@ void dumpRpc(CTelegramStream &stream)
         TLInputChannel channel;
         stream >> channel;
         qDebug() << request << "channel" << channel;
+    }
+        break;
+
+    case TLValue::ChannelsDeleteHistory: {
+        TLInputChannel channel;
+        stream >> channel;
+        quint32 maxId;
+        stream >> maxId;
+        qDebug() << request << "channel" << channel << "maxId" << maxId;
     }
         break;
 
@@ -408,9 +538,20 @@ void dumpRpc(CTelegramStream &stream)
         stream >> channel;
         TLInputUser userId;
         stream >> userId;
-        TLChannelParticipantRole role;
-        stream >> role;
-        qDebug() << request << "channel" << channel << "userId" << userId << "role" << role;
+        TLChannelAdminRights adminRights;
+        stream >> adminRights;
+        qDebug() << request << "channel" << channel << "userId" << userId << "adminRights" << adminRights;
+    }
+        break;
+
+    case TLValue::ChannelsEditBanned: {
+        TLInputChannel channel;
+        stream >> channel;
+        TLInputUser userId;
+        stream >> userId;
+        TLChannelBannedRights bannedRights;
+        stream >> bannedRights;
+        qDebug() << request << "channel" << channel << "userId" << userId << "bannedRights" << bannedRights;
     }
         break;
 
@@ -439,19 +580,26 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::ChannelsExportMessageLink: {
+        TLInputChannel channel;
+        stream >> channel;
+        quint32 id;
+        stream >> id;
+        bool grouped;
+        stream >> grouped;
+        qDebug() << request << "channel" << channel << "id" << id << "grouped" << grouped;
+    }
+        break;
+
+    case TLValue::ChannelsGetAdminedPublicChannels: {
+        qDebug() << request;
+    }
+        break;
+
     case TLValue::ChannelsGetChannels: {
         TLVector<TLInputChannel> id;
         stream >> id;
         qDebug() << request << "id" << id;
-    }
-        break;
-
-    case TLValue::ChannelsGetDialogs: {
-        quint32 offset;
-        stream >> offset;
-        quint32 limit;
-        stream >> limit;
-        qDebug() << request << "offset" << offset << "limit" << limit;
     }
         break;
 
@@ -462,27 +610,17 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::ChannelsGetImportantHistory: {
-        TLInputChannel channel;
-        stream >> channel;
-        quint32 offsetId;
-        stream >> offsetId;
-        quint32 addOffset;
-        stream >> addOffset;
-        quint32 limit;
-        stream >> limit;
-        quint32 maxId;
-        stream >> maxId;
-        quint32 minId;
-        stream >> minId;
-        qDebug() << request << "channel" << channel << "offsetId" << offsetId << "addOffset" << addOffset << "limit" << limit << "maxId" << maxId << "minId" << minId;
+    case TLValue::ChannelsGetLeftChannels: {
+        quint32 offset;
+        stream >> offset;
+        qDebug() << request << "offset" << offset;
     }
         break;
 
     case TLValue::ChannelsGetMessages: {
         TLInputChannel channel;
         stream >> channel;
-        TLVector<quint32> id;
+        TLVector<TLInputMessage> id;
         stream >> id;
         qDebug() << request << "channel" << channel << "id" << id;
     }
@@ -506,7 +644,9 @@ void dumpRpc(CTelegramStream &stream)
         stream >> offset;
         quint32 limit;
         stream >> limit;
-        qDebug() << request << "channel" << channel << "filter" << filter << "offset" << offset << "limit" << limit;
+        quint32 hash;
+        stream >> hash;
+        qDebug() << request << "channel" << channel << "filter" << filter << "offset" << offset << "limit" << limit << "hash" << hash;
     }
         break;
 
@@ -526,17 +666,6 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::ChannelsKickFromChannel: {
-        TLInputChannel channel;
-        stream >> channel;
-        TLInputUser userId;
-        stream >> userId;
-        bool kicked;
-        stream >> kicked;
-        qDebug() << request << "channel" << channel << "userId" << userId << "kicked" << kicked;
-    }
-        break;
-
     case TLValue::ChannelsLeaveChannel: {
         TLInputChannel channel;
         stream >> channel;
@@ -553,6 +682,15 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::ChannelsReadMessageContents: {
+        TLInputChannel channel;
+        stream >> channel;
+        TLVector<quint32> id;
+        stream >> id;
+        qDebug() << request << "channel" << channel << "id" << id;
+    }
+        break;
+
     case TLValue::ChannelsReportSpam: {
         TLInputChannel channel;
         stream >> channel;
@@ -564,7 +702,34 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::ChannelsToggleComments: {
+    case TLValue::ChannelsSetStickers: {
+        TLInputChannel channel;
+        stream >> channel;
+        TLInputStickerSet stickerset;
+        stream >> stickerset;
+        qDebug() << request << "channel" << channel << "stickerset" << stickerset;
+    }
+        break;
+
+    case TLValue::ChannelsToggleInvites: {
+        TLInputChannel channel;
+        stream >> channel;
+        bool enabled;
+        stream >> enabled;
+        qDebug() << request << "channel" << channel << "enabled" << enabled;
+    }
+        break;
+
+    case TLValue::ChannelsTogglePreHistoryHidden: {
+        TLInputChannel channel;
+        stream >> channel;
+        bool enabled;
+        stream >> enabled;
+        qDebug() << request << "channel" << channel << "enabled" << enabled;
+    }
+        break;
+
+    case TLValue::ChannelsToggleSignatures: {
         TLInputChannel channel;
         stream >> channel;
         bool enabled;
@@ -589,6 +754,13 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::ContactsDeleteByPhones: {
+        TLVector<QString> phones;
+        stream >> phones;
+        qDebug() << request << "phones" << phones;
+    }
+        break;
+
     case TLValue::ContactsDeleteContact: {
         TLInputUser id;
         stream >> id;
@@ -603,11 +775,6 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::ContactsExportCard: {
-        qDebug() << request;
-    }
-        break;
-
     case TLValue::ContactsGetBlocked: {
         quint32 offset;
         stream >> offset;
@@ -617,10 +784,22 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::ContactsGetContacts: {
-        QString hash;
+    case TLValue::ContactsGetContactIDs: {
+        quint32 hash;
         stream >> hash;
         qDebug() << request << "hash" << hash;
+    }
+        break;
+
+    case TLValue::ContactsGetContacts: {
+        quint32 hash;
+        stream >> hash;
+        qDebug() << request << "hash" << hash;
+    }
+        break;
+
+    case TLValue::ContactsGetSaved: {
+        qDebug() << request;
     }
         break;
 
@@ -629,26 +808,24 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::ContactsGetSuggested: {
-        quint32 limit;
-        stream >> limit;
-        qDebug() << request << "limit" << limit;
-    }
-        break;
-
-    case TLValue::ContactsImportCard: {
-        TLVector<quint32> exportCard;
-        stream >> exportCard;
-        qDebug() << request << "exportCard" << exportCard;
-    }
-        break;
-
     case TLValue::ContactsImportContacts: {
         TLVector<TLInputContact> contacts;
         stream >> contacts;
-        bool replace;
-        stream >> replace;
-        qDebug() << request << "contacts" << contacts << "replace" << replace;
+        qDebug() << request << "contacts" << contacts;
+    }
+        break;
+
+    case TLValue::ContactsResetSaved: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::ContactsResetTopPeerRating: {
+        TLTopPeerCategory category;
+        stream >> category;
+        TLInputPeer peer;
+        stream >> peer;
+        qDebug() << request << "category" << category << "peer" << peer;
     }
         break;
 
@@ -668,6 +845,13 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::ContactsToggleTopPeers: {
+        bool enabled;
+        stream >> enabled;
+        qDebug() << request << "enabled" << enabled;
+    }
+        break;
+
     case TLValue::ContactsUnblock: {
         TLInputUser id;
         stream >> id;
@@ -675,29 +859,79 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::ContestSaveDeveloperInfo: {
+        quint32 vkId;
+        stream >> vkId;
+        QString name;
+        stream >> name;
+        QString phoneNumber;
+        stream >> phoneNumber;
+        quint32 age;
+        stream >> age;
+        QString city;
+        stream >> city;
+        qDebug() << request << "vkId" << vkId << "name" << name << "phoneNumber" << phoneNumber << "age" << age << "city" << city;
+    }
+        break;
+
+    case TLValue::DestroyAuthKey: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::DestroySession: {
+        quint64 sessionId;
+        stream >> sessionId;
+        qDebug() << request << "sessionId" << sessionId;
+    }
+        break;
+
+    case TLValue::GetFutureSalts: {
+        quint32 num;
+        stream >> num;
+        qDebug() << request << "num" << num;
+    }
+        break;
+
+    case TLValue::HelpAcceptTermsOfService: {
+        TLDataJSON id;
+        stream >> id;
+        qDebug() << request << "id" << id;
+    }
+        break;
+
+    case TLValue::HelpEditUserInfo: {
+        TLInputUser userId;
+        stream >> userId;
+        QString message;
+        stream >> message;
+        TLVector<TLMessageEntity> entities;
+        stream >> entities;
+        qDebug() << request << "userId" << userId << "message" << message << "entities" << entities;
+    }
+        break;
+
     case TLValue::HelpGetAppChangelog: {
-        QString deviceModel;
-        stream >> deviceModel;
-        QString systemVersion;
-        stream >> systemVersion;
-        QString appVersion;
-        stream >> appVersion;
-        QString langCode;
-        stream >> langCode;
-        qDebug() << request << "deviceModel" << deviceModel << "systemVersion" << systemVersion << "appVersion" << appVersion << "langCode" << langCode;
+        QString prevAppVersion;
+        stream >> prevAppVersion;
+        qDebug() << request << "prevAppVersion" << prevAppVersion;
+    }
+        break;
+
+    case TLValue::HelpGetAppConfig: {
+        qDebug() << request;
     }
         break;
 
     case TLValue::HelpGetAppUpdate: {
-        QString deviceModel;
-        stream >> deviceModel;
-        QString systemVersion;
-        stream >> systemVersion;
-        QString appVersion;
-        stream >> appVersion;
-        QString langCode;
-        stream >> langCode;
-        qDebug() << request << "deviceModel" << deviceModel << "systemVersion" << systemVersion << "appVersion" << appVersion << "langCode" << langCode;
+        QString source;
+        stream >> source;
+        qDebug() << request << "source" << source;
+    }
+        break;
+
+    case TLValue::HelpGetCdnConfig: {
+        qDebug() << request;
     }
         break;
 
@@ -706,10 +940,15 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::HelpGetDeepLinkInfo: {
+        QString path;
+        stream >> path;
+        qDebug() << request << "path" << path;
+    }
+        break;
+
     case TLValue::HelpGetInviteText: {
-        QString langCode;
-        stream >> langCode;
-        qDebug() << request << "langCode" << langCode;
+        qDebug() << request;
     }
         break;
 
@@ -718,15 +957,44 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::HelpGetPassportConfig: {
+        quint32 hash;
+        stream >> hash;
+        qDebug() << request << "hash" << hash;
+    }
+        break;
+
+    case TLValue::HelpGetProxyData: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::HelpGetRecentMeUrls: {
+        QString referer;
+        stream >> referer;
+        qDebug() << request << "referer" << referer;
+    }
+        break;
+
     case TLValue::HelpGetSupport: {
         qDebug() << request;
     }
         break;
 
-    case TLValue::HelpGetTermsOfService: {
-        QString langCode;
-        stream >> langCode;
-        qDebug() << request << "langCode" << langCode;
+    case TLValue::HelpGetSupportName: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::HelpGetTermsOfServiceUpdate: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::HelpGetUserInfo: {
+        TLInputUser userId;
+        stream >> userId;
+        qDebug() << request << "userId" << userId;
     }
         break;
 
@@ -734,6 +1002,15 @@ void dumpRpc(CTelegramStream &stream)
         TLVector<TLInputAppEvent> events;
         stream >> events;
         qDebug() << request << "events" << events;
+    }
+        break;
+
+    case TLValue::HelpSetBotUpdatesStatus: {
+        quint32 pendingUpdatesCount;
+        stream >> pendingUpdatesCount;
+        QString message;
+        stream >> message;
+        qDebug() << request << "pendingUpdatesCount" << pendingUpdatesCount << "message" << message;
     }
         break;
 
@@ -757,8 +1034,63 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::InvokeWithMessagesRange: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::InvokeWithTakeout: {
+        qDebug() << request;
+    }
+        break;
+
     case TLValue::InvokeWithoutUpdates: {
         qDebug() << request;
+    }
+        break;
+
+    case TLValue::LangpackGetDifference: {
+        QString langCode;
+        stream >> langCode;
+        quint32 fromVersion;
+        stream >> fromVersion;
+        qDebug() << request << "langCode" << langCode << "fromVersion" << fromVersion;
+    }
+        break;
+
+    case TLValue::LangpackGetLangPack: {
+        QString langPack;
+        stream >> langPack;
+        QString langCode;
+        stream >> langCode;
+        qDebug() << request << "langPack" << langPack << "langCode" << langCode;
+    }
+        break;
+
+    case TLValue::LangpackGetLanguage: {
+        QString langPack;
+        stream >> langPack;
+        QString langCode;
+        stream >> langCode;
+        qDebug() << request << "langPack" << langPack << "langCode" << langCode;
+    }
+        break;
+
+    case TLValue::LangpackGetLanguages: {
+        QString langPack;
+        stream >> langPack;
+        qDebug() << request << "langPack" << langPack;
+    }
+        break;
+
+    case TLValue::LangpackGetStrings: {
+        QString langPack;
+        stream >> langPack;
+        QString langCode;
+        stream >> langCode;
+        TLVector<QString> keys;
+        stream >> keys;
+        qDebug() << request << "langPack" << langPack << "langCode" << langCode << "keys" << keys;
     }
         break;
 
@@ -791,6 +1123,11 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::MessagesClearAllDrafts: {
+        qDebug() << request;
+    }
+        break;
+
     case TLValue::MessagesCreateChat: {
         TLVector<TLInputUser> users;
         stream >> users;
@@ -806,22 +1143,6 @@ void dumpRpc(CTelegramStream &stream)
         TLInputUser userId;
         stream >> userId;
         qDebug() << request << "chatId" << chatId << "userId" << userId;
-    }
-        break;
-
-    case TLValue::MessagesDeleteHistory: {
-        TLInputPeer peer;
-        stream >> peer;
-        quint32 maxId;
-        stream >> maxId;
-        qDebug() << request << "peer" << peer << "maxId" << maxId;
-    }
-        break;
-
-    case TLValue::MessagesDeleteMessages: {
-        TLVector<quint32> id;
-        stream >> id;
-        qDebug() << request << "id" << id;
     }
         break;
 
@@ -868,14 +1189,24 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::MessagesForwardMessage: {
-        TLInputPeer peer;
-        stream >> peer;
-        quint32 id;
+    case TLValue::MessagesFaveSticker: {
+        TLInputDocument id;
         stream >> id;
-        quint64 randomId;
-        stream >> randomId;
-        qDebug() << request << "peer" << peer << "id" << id << "randomId" << randomId;
+        bool unfave;
+        stream >> unfave;
+        qDebug() << request << "id" << id << "unfave" << unfave;
+    }
+        break;
+
+    case TLValue::MessagesGetAllChats: {
+        TLVector<quint32> exceptIds;
+        stream >> exceptIds;
+        qDebug() << request << "exceptIds" << exceptIds;
+    }
+        break;
+
+    case TLValue::MessagesGetAllDrafts: {
+        qDebug() << request;
     }
         break;
 
@@ -886,10 +1217,28 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::MessagesGetAttachedStickers: {
+        TLInputStickeredMedia media;
+        stream >> media;
+        qDebug() << request << "media" << media;
+    }
+        break;
+
     case TLValue::MessagesGetChats: {
         TLVector<quint32> id;
         stream >> id;
         qDebug() << request << "id" << id;
+    }
+        break;
+
+    case TLValue::MessagesGetCommonChats: {
+        TLInputUser userId;
+        stream >> userId;
+        quint32 maxId;
+        stream >> maxId;
+        quint32 limit;
+        stream >> limit;
+        qDebug() << request << "userId" << userId << "maxId" << maxId << "limit" << limit;
     }
         break;
 
@@ -902,16 +1251,8 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::MessagesGetDialogs: {
-        quint32 offsetDate;
-        stream >> offsetDate;
-        quint32 offsetId;
-        stream >> offsetId;
-        TLInputPeer offsetPeer;
-        stream >> offsetPeer;
-        quint32 limit;
-        stream >> limit;
-        qDebug() << request << "offsetDate" << offsetDate << "offsetId" << offsetId << "offsetPeer" << offsetPeer << "limit" << limit;
+    case TLValue::MessagesGetDialogUnreadMarks: {
+        qDebug() << request;
     }
         break;
 
@@ -926,10 +1267,35 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::MessagesGetFavedStickers: {
+        quint32 hash;
+        stream >> hash;
+        qDebug() << request << "hash" << hash;
+    }
+        break;
+
+    case TLValue::MessagesGetFeaturedStickers: {
+        quint32 hash;
+        stream >> hash;
+        qDebug() << request << "hash" << hash;
+    }
+        break;
+
     case TLValue::MessagesGetFullChat: {
         quint32 chatId;
         stream >> chatId;
         qDebug() << request << "chatId" << chatId;
+    }
+        break;
+
+    case TLValue::MessagesGetGameHighScores: {
+        TLInputPeer peer;
+        stream >> peer;
+        quint32 id;
+        stream >> id;
+        TLInputUser userId;
+        stream >> userId;
+        qDebug() << request << "peer" << peer << "id" << id << "userId" << userId;
     }
         break;
 
@@ -938,6 +1304,8 @@ void dumpRpc(CTelegramStream &stream)
         stream >> peer;
         quint32 offsetId;
         stream >> offsetId;
+        quint32 offsetDate;
+        stream >> offsetDate;
         quint32 addOffset;
         stream >> addOffset;
         quint32 limit;
@@ -946,23 +1314,39 @@ void dumpRpc(CTelegramStream &stream)
         stream >> maxId;
         quint32 minId;
         stream >> minId;
-        qDebug() << request << "peer" << peer << "offsetId" << offsetId << "addOffset" << addOffset << "limit" << limit << "maxId" << maxId << "minId" << minId;
+        quint32 hash;
+        stream >> hash;
+        qDebug() << request << "peer" << peer << "offsetId" << offsetId << "offsetDate" << offsetDate << "addOffset" << addOffset << "limit" << limit << "maxId" << maxId << "minId" << minId << "hash" << hash;
     }
         break;
 
-    case TLValue::MessagesGetInlineBotResults: {
-        TLInputUser bot;
-        stream >> bot;
-        QString query;
-        stream >> query;
-        QString offset;
-        stream >> offset;
-        qDebug() << request << "bot" << bot << "query" << query << "offset" << offset;
+    case TLValue::MessagesGetInlineGameHighScores: {
+        TLInputBotInlineMessageID id;
+        stream >> id;
+        TLInputUser userId;
+        stream >> userId;
+        qDebug() << request << "id" << id << "userId" << userId;
+    }
+        break;
+
+    case TLValue::MessagesGetMaskStickers: {
+        quint32 hash;
+        stream >> hash;
+        qDebug() << request << "hash" << hash;
+    }
+        break;
+
+    case TLValue::MessagesGetMessageEditData: {
+        TLInputPeer peer;
+        stream >> peer;
+        quint32 id;
+        stream >> id;
+        qDebug() << request << "peer" << peer << "id" << id;
     }
         break;
 
     case TLValue::MessagesGetMessages: {
-        TLVector<quint32> id;
+        TLVector<TLInputMessage> id;
         stream >> id;
         qDebug() << request << "id" << id;
     }
@@ -979,10 +1363,68 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::MessagesGetOnlines: {
+        TLInputPeer peer;
+        stream >> peer;
+        qDebug() << request << "peer" << peer;
+    }
+        break;
+
+    case TLValue::MessagesGetPeerDialogs: {
+        TLVector<TLInputDialogPeer> peers;
+        stream >> peers;
+        qDebug() << request << "peers" << peers;
+    }
+        break;
+
+    case TLValue::MessagesGetPeerSettings: {
+        TLInputPeer peer;
+        stream >> peer;
+        qDebug() << request << "peer" << peer;
+    }
+        break;
+
+    case TLValue::MessagesGetPinnedDialogs: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::MessagesGetPollResults: {
+        TLInputPeer peer;
+        stream >> peer;
+        quint32 msgId;
+        stream >> msgId;
+        qDebug() << request << "peer" << peer << "msgId" << msgId;
+    }
+        break;
+
+    case TLValue::MessagesGetRecentLocations: {
+        TLInputPeer peer;
+        stream >> peer;
+        quint32 limit;
+        stream >> limit;
+        quint32 hash;
+        stream >> hash;
+        qDebug() << request << "peer" << peer << "limit" << limit << "hash" << hash;
+    }
+        break;
+
     case TLValue::MessagesGetSavedGifs: {
         quint32 hash;
         stream >> hash;
         qDebug() << request << "hash" << hash;
+    }
+        break;
+
+    case TLValue::MessagesGetSplitRanges: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::MessagesGetStatsURL: {
+        TLInputPeer peer;
+        stream >> peer;
+        qDebug() << request << "peer" << peer;
     }
         break;
 
@@ -996,16 +1438,42 @@ void dumpRpc(CTelegramStream &stream)
     case TLValue::MessagesGetStickers: {
         QString emoticon;
         stream >> emoticon;
-        QString hash;
+        quint32 hash;
         stream >> hash;
         qDebug() << request << "emoticon" << emoticon << "hash" << hash;
     }
         break;
 
-    case TLValue::MessagesGetWebPagePreview: {
-        QString message;
-        stream >> message;
-        qDebug() << request << "message" << message;
+    case TLValue::MessagesGetUnreadMentions: {
+        TLInputPeer peer;
+        stream >> peer;
+        quint32 offsetId;
+        stream >> offsetId;
+        quint32 addOffset;
+        stream >> addOffset;
+        quint32 limit;
+        stream >> limit;
+        quint32 maxId;
+        stream >> maxId;
+        quint32 minId;
+        stream >> minId;
+        qDebug() << request << "peer" << peer << "offsetId" << offsetId << "addOffset" << addOffset << "limit" << limit << "maxId" << maxId << "minId" << minId;
+    }
+        break;
+
+    case TLValue::MessagesGetWebPage: {
+        QString url;
+        stream >> url;
+        quint32 hash;
+        stream >> hash;
+        qDebug() << request << "url" << url << "hash" << hash;
+    }
+        break;
+
+    case TLValue::MessagesHideReportSpam: {
+        TLInputPeer peer;
+        stream >> peer;
+        qDebug() << request << "peer" << peer;
     }
         break;
 
@@ -1019,9 +1487,9 @@ void dumpRpc(CTelegramStream &stream)
     case TLValue::MessagesInstallStickerSet: {
         TLInputStickerSet stickerset;
         stream >> stickerset;
-        bool disabled;
-        stream >> disabled;
-        qDebug() << request << "stickerset" << stickerset << "disabled" << disabled;
+        bool archived;
+        stream >> archived;
+        qDebug() << request << "stickerset" << stickerset << "archived" << archived;
     }
         break;
 
@@ -1041,12 +1509,26 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::MessagesReadFeaturedStickers: {
+        TLVector<quint64> id;
+        stream >> id;
+        qDebug() << request << "id" << id;
+    }
+        break;
+
     case TLValue::MessagesReadHistory: {
         TLInputPeer peer;
         stream >> peer;
         quint32 maxId;
         stream >> maxId;
         qDebug() << request << "peer" << peer << "maxId" << maxId;
+    }
+        break;
+
+    case TLValue::MessagesReadMentions: {
+        TLInputPeer peer;
+        stream >> peer;
+        qDebug() << request << "peer" << peer;
     }
         break;
 
@@ -1071,10 +1553,21 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::MessagesReorderStickerSets: {
-        TLVector<quint64> order;
-        stream >> order;
-        qDebug() << request << "order" << order;
+    case TLValue::MessagesReport: {
+        TLInputPeer peer;
+        stream >> peer;
+        TLVector<quint32> id;
+        stream >> id;
+        TLReportReason reason;
+        stream >> reason;
+        qDebug() << request << "peer" << peer << "id" << id << "reason" << reason;
+    }
+        break;
+
+    case TLValue::MessagesReportEncryptedSpam: {
+        TLInputEncryptedChat peer;
+        stream >> peer;
+        qDebug() << request << "peer" << peer;
     }
         break;
 
@@ -1129,19 +1622,6 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
-    case TLValue::MessagesSendBroadcast: {
-        TLVector<TLInputUser> contacts;
-        stream >> contacts;
-        TLVector<quint64> randomId;
-        stream >> randomId;
-        QString message;
-        stream >> message;
-        TLInputMedia media;
-        stream >> media;
-        qDebug() << request << "contacts" << contacts << "randomId" << randomId << "message" << message << "media" << media;
-    }
-        break;
-
     case TLValue::MessagesSendEncrypted: {
         TLInputEncryptedChat peer;
         stream >> peer;
@@ -1174,6 +1654,28 @@ void dumpRpc(CTelegramStream &stream)
         QByteArray data;
         stream >> data;
         qDebug() << request << "peer" << peer << "randomId" << randomId << "data" << data;
+    }
+        break;
+
+    case TLValue::MessagesSendScreenshotNotification: {
+        TLInputPeer peer;
+        stream >> peer;
+        quint32 replyToMsgId;
+        stream >> replyToMsgId;
+        quint64 randomId;
+        stream >> randomId;
+        qDebug() << request << "peer" << peer << "replyToMsgId" << replyToMsgId << "randomId" << randomId;
+    }
+        break;
+
+    case TLValue::MessagesSendVote: {
+        TLInputPeer peer;
+        stream >> peer;
+        quint32 msgId;
+        stream >> msgId;
+        TLVector<QByteArray> options;
+        stream >> options;
+        qDebug() << request << "peer" << peer << "msgId" << msgId << "options" << options;
     }
         break;
 
@@ -1224,6 +1726,125 @@ void dumpRpc(CTelegramStream &stream)
     }
         break;
 
+    case TLValue::MessagesUploadEncryptedFile: {
+        TLInputEncryptedChat peer;
+        stream >> peer;
+        TLInputEncryptedFile file;
+        stream >> file;
+        qDebug() << request << "peer" << peer << "file" << file;
+    }
+        break;
+
+    case TLValue::MessagesUploadMedia: {
+        TLInputPeer peer;
+        stream >> peer;
+        TLInputMedia media;
+        stream >> media;
+        qDebug() << request << "peer" << peer << "media" << media;
+    }
+        break;
+
+    case TLValue::PaymentsGetPaymentForm: {
+        quint32 msgId;
+        stream >> msgId;
+        qDebug() << request << "msgId" << msgId;
+    }
+        break;
+
+    case TLValue::PaymentsGetPaymentReceipt: {
+        quint32 msgId;
+        stream >> msgId;
+        qDebug() << request << "msgId" << msgId;
+    }
+        break;
+
+    case TLValue::PaymentsGetSavedInfo: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::PhoneAcceptCall: {
+        TLInputPhoneCall peer;
+        stream >> peer;
+        QByteArray gB;
+        stream >> gB;
+        TLPhoneCallProtocol protocol;
+        stream >> protocol;
+        qDebug() << request << "peer" << peer << "gB" << gB << "protocol" << protocol;
+    }
+        break;
+
+    case TLValue::PhoneConfirmCall: {
+        TLInputPhoneCall peer;
+        stream >> peer;
+        QByteArray gA;
+        stream >> gA;
+        quint64 keyFingerprint;
+        stream >> keyFingerprint;
+        TLPhoneCallProtocol protocol;
+        stream >> protocol;
+        qDebug() << request << "peer" << peer << "gA" << gA << "keyFingerprint" << keyFingerprint << "protocol" << protocol;
+    }
+        break;
+
+    case TLValue::PhoneDiscardCall: {
+        TLInputPhoneCall peer;
+        stream >> peer;
+        quint32 duration;
+        stream >> duration;
+        TLPhoneCallDiscardReason reason;
+        stream >> reason;
+        quint64 connectionId;
+        stream >> connectionId;
+        qDebug() << request << "peer" << peer << "duration" << duration << "reason" << reason << "connectionId" << connectionId;
+    }
+        break;
+
+    case TLValue::PhoneGetCallConfig: {
+        qDebug() << request;
+    }
+        break;
+
+    case TLValue::PhoneReceivedCall: {
+        TLInputPhoneCall peer;
+        stream >> peer;
+        qDebug() << request << "peer" << peer;
+    }
+        break;
+
+    case TLValue::PhoneRequestCall: {
+        TLInputUser userId;
+        stream >> userId;
+        quint32 randomId;
+        stream >> randomId;
+        QByteArray gAHash;
+        stream >> gAHash;
+        TLPhoneCallProtocol protocol;
+        stream >> protocol;
+        qDebug() << request << "userId" << userId << "randomId" << randomId << "gAHash" << gAHash << "protocol" << protocol;
+    }
+        break;
+
+    case TLValue::PhoneSaveCallDebug: {
+        TLInputPhoneCall peer;
+        stream >> peer;
+        TLDataJSON debug;
+        stream >> debug;
+        qDebug() << request << "peer" << peer << "debug" << debug;
+    }
+        break;
+
+    case TLValue::PhoneSetCallRating: {
+        TLInputPhoneCall peer;
+        stream >> peer;
+        quint32 rating;
+        stream >> rating;
+        QString comment;
+        stream >> comment;
+        qDebug() << request << "peer" << peer << "rating" << rating << "comment" << comment;
+    }
+        break;
+
     case TLValue::PhotosDeletePhotos: {
         TLVector<TLInputPhoto> id;
         stream >> id;
@@ -1247,51 +1868,129 @@ void dumpRpc(CTelegramStream &stream)
     case TLValue::PhotosUpdateProfilePhoto: {
         TLInputPhoto id;
         stream >> id;
-        TLInputPhotoCrop crop;
-        stream >> crop;
-        qDebug() << request << "id" << id << "crop" << crop;
+        qDebug() << request << "id" << id;
     }
         break;
 
     case TLValue::PhotosUploadProfilePhoto: {
         TLInputFile file;
         stream >> file;
-        QString caption;
-        stream >> caption;
-        TLInputGeoPoint geoPoint;
-        stream >> geoPoint;
-        TLInputPhotoCrop crop;
-        stream >> crop;
-        qDebug() << request << "file" << file << "caption" << caption << "geoPoint" << geoPoint << "crop" << crop;
+        qDebug() << request << "file" << file;
     }
         break;
 
-    case TLValue::UpdatesGetChannelDifference: {
-        TLInputChannel channel;
-        stream >> channel;
-        TLChannelMessagesFilter filter;
-        stream >> filter;
-        quint32 pts;
-        stream >> pts;
-        quint32 limit;
-        stream >> limit;
-        qDebug() << request << "channel" << channel << "filter" << filter << "pts" << pts << "limit" << limit;
+    case TLValue::Ping: {
+        quint64 pingId;
+        stream >> pingId;
+        qDebug() << request << "pingId" << pingId;
     }
         break;
 
-    case TLValue::UpdatesGetDifference: {
-        quint32 pts;
-        stream >> pts;
-        quint32 date;
-        stream >> date;
-        quint32 qts;
-        stream >> qts;
-        qDebug() << request << "pts" << pts << "date" << date << "qts" << qts;
+    case TLValue::PingDelayDisconnect: {
+        quint64 pingId;
+        stream >> pingId;
+        quint32 disconnectDelay;
+        stream >> disconnectDelay;
+        qDebug() << request << "pingId" << pingId << "disconnectDelay" << disconnectDelay;
+    }
+        break;
+
+    case TLValue::ReqDHParams: {
+        TLNumber128 nonce;
+        stream >> nonce;
+        TLNumber128 serverNonce;
+        stream >> serverNonce;
+        QString p;
+        stream >> p;
+        QString q;
+        stream >> q;
+        quint64 publicKeyFingerprint;
+        stream >> publicKeyFingerprint;
+        QString encryptedData;
+        stream >> encryptedData;
+        qDebug() << request << "nonce" << nonce << "serverNonce" << serverNonce << "p" << p << "q" << q << "publicKeyFingerprint" << publicKeyFingerprint << "encryptedData" << encryptedData;
+    }
+        break;
+
+    case TLValue::ReqPq: {
+        TLNumber128 nonce;
+        stream >> nonce;
+        qDebug() << request << "nonce" << nonce;
+    }
+        break;
+
+    case TLValue::ReqPqMulti: {
+        TLNumber128 nonce;
+        stream >> nonce;
+        qDebug() << request << "nonce" << nonce;
+    }
+        break;
+
+    case TLValue::RpcDropAnswer: {
+        quint64 reqMsgId;
+        stream >> reqMsgId;
+        qDebug() << request << "reqMsgId" << reqMsgId;
+    }
+        break;
+
+    case TLValue::SetClientDHParams: {
+        TLNumber128 nonce;
+        stream >> nonce;
+        TLNumber128 serverNonce;
+        stream >> serverNonce;
+        QString encryptedData;
+        stream >> encryptedData;
+        qDebug() << request << "nonce" << nonce << "serverNonce" << serverNonce << "encryptedData" << encryptedData;
+    }
+        break;
+
+    case TLValue::StickersAddStickerToSet: {
+        TLInputStickerSet stickerset;
+        stream >> stickerset;
+        TLInputStickerSetItem sticker;
+        stream >> sticker;
+        qDebug() << request << "stickerset" << stickerset << "sticker" << sticker;
+    }
+        break;
+
+    case TLValue::StickersChangeStickerPosition: {
+        TLInputDocument sticker;
+        stream >> sticker;
+        quint32 position;
+        stream >> position;
+        qDebug() << request << "sticker" << sticker << "position" << position;
+    }
+        break;
+
+    case TLValue::StickersRemoveStickerFromSet: {
+        TLInputDocument sticker;
+        stream >> sticker;
+        qDebug() << request << "sticker" << sticker;
     }
         break;
 
     case TLValue::UpdatesGetState: {
         qDebug() << request;
+    }
+        break;
+
+    case TLValue::UploadGetCdnFile: {
+        QByteArray fileToken;
+        stream >> fileToken;
+        quint32 offset;
+        stream >> offset;
+        quint32 limit;
+        stream >> limit;
+        qDebug() << request << "fileToken" << fileToken << "offset" << offset << "limit" << limit;
+    }
+        break;
+
+    case TLValue::UploadGetCdnFileHashes: {
+        QByteArray fileToken;
+        stream >> fileToken;
+        quint32 offset;
+        stream >> offset;
+        qDebug() << request << "fileToken" << fileToken << "offset" << offset;
     }
         break;
 
@@ -1303,6 +2002,35 @@ void dumpRpc(CTelegramStream &stream)
         quint32 limit;
         stream >> limit;
         qDebug() << request << "location" << location << "offset" << offset << "limit" << limit;
+    }
+        break;
+
+    case TLValue::UploadGetFileHashes: {
+        TLInputFileLocation location;
+        stream >> location;
+        quint32 offset;
+        stream >> offset;
+        qDebug() << request << "location" << location << "offset" << offset;
+    }
+        break;
+
+    case TLValue::UploadGetWebFile: {
+        TLInputWebFileLocation location;
+        stream >> location;
+        quint32 offset;
+        stream >> offset;
+        quint32 limit;
+        stream >> limit;
+        qDebug() << request << "location" << location << "offset" << offset << "limit" << limit;
+    }
+        break;
+
+    case TLValue::UploadReuploadCdnFile: {
+        QByteArray fileToken;
+        stream >> fileToken;
+        QByteArray requestToken;
+        stream >> requestToken;
+        qDebug() << request << "fileToken" << fileToken << "requestToken" << requestToken;
     }
         break;
 
@@ -1341,6 +2069,15 @@ void dumpRpc(CTelegramStream &stream)
         TLVector<TLInputUser> id;
         stream >> id;
         qDebug() << request << "id" << id;
+    }
+        break;
+
+    case TLValue::UsersSetSecureValueErrors: {
+        TLInputUser id;
+        stream >> id;
+        TLVector<TLSecureValueError> errors;
+        stream >> errors;
+        qDebug() << request << "id" << id << "errors" << errors;
     }
         break;
 
